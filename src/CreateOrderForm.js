@@ -2,10 +2,13 @@
 import React, { useState } from 'react';
 import { createOrder } from './services/ordersService';
 
+
+
 function CreateOrderForm({ onOrderCreated }) {
   const [customerId, setCustomerId] = useState('');
   const [telephoneNumber, setTelephoneNumber] = useState('');
   const [serviceType, setServiceType] = useState('Office');
+  const [deliveryAddress, setDeliveryAddress] = useState('');
   const [items, setItems] = useState([
     { type: 'Carpet', length: '', width: '' }
   ]);
@@ -37,9 +40,11 @@ function CreateOrderForm({ onOrderCreated }) {
       customerId,
       telephoneNumber,
       serviceType,
+      deliveryAddress: serviceType === 'PickupDelivery' ? deliveryAddress : null,
       status: 'Pending',
       items: formattedItems,
     };
+    
 
     try {
       await createOrder(newOrder);
@@ -72,6 +77,17 @@ function CreateOrderForm({ onOrderCreated }) {
         <option value="Office">Office</option>
         <option value="PickupDelivery">PickupDelivery</option>
       </select>
+
+      {serviceType === 'PickupDelivery' && (
+  <input
+    type="text"
+    placeholder="Delivery Address"
+    value={deliveryAddress}
+    onChange={(e) => setDeliveryAddress(e.target.value)}
+    required
+  />
+)}
+
 
       <h4>Items</h4>
       {items.map((item, index) => (

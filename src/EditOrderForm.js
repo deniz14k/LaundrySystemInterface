@@ -2,12 +2,16 @@
 import React, { useState } from 'react';
 import { updateOrder } from './services/ordersService';
 
+
+
 function EditOrderForm({ order, onUpdated, onCancel }) {
   const [customerId, setCustomerId] = useState(order.customerId);
   const [telephoneNumber, setTelephoneNumber] = useState(order.telephoneNumber);
   const [status, setStatus] = useState(order.status);
   const [serviceType, setServiceType] = useState(order.serviceType || 'Office');
   const [items, setItems] = useState(order.items);
+  const [deliveryAddress, setDeliveryAddress] = useState(order.deliveryAddress || ''); // 👈 move this line here
+
 
   const handleItemChange = (index, field, value) => {
     const updated = [...items];
@@ -30,14 +34,16 @@ function EditOrderForm({ order, onUpdated, onCancel }) {
       ...order,
       customerId,
       telephoneNumber,
-      status,
       serviceType,
+      deliveryAddress: serviceType === 'PickupDelivery' ? deliveryAddress : null,
+      status,
       items: items.map(item => ({
         ...item,
         length: item.type === 'Carpet' ? parseFloat(item.length) : null,
-        width: item.type === 'Carpet' ? parseFloat(item.width) : null
+        width: item.type === 'Carpet' ? parseFloat(item.width) : null,
       })),
     };
+    
 
     try {
       await updateOrder(order.id, updatedOrder);
@@ -67,6 +73,17 @@ function EditOrderForm({ order, onUpdated, onCancel }) {
         placeholder="Phone"
         required
       />
+
+{serviceType === 'PickupDelivery' && (
+  <input
+    type="text"
+    placeholder="Delivery Address"
+    value={deliveryAddress}
+    onChange={(e) => setDeliveryAddress(e.target.value)}
+    required
+  />
+)}
+
 
       <select value={status} onChange={(e) => setStatus(e.target.value)}>
         <option value="Pending">Pending</option>
