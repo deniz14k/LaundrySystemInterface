@@ -10,7 +10,8 @@ function EditOrderForm({ order, onUpdated, onCancel }) {
   const [status, setStatus] = useState(order.status);
   const [serviceType, setServiceType] = useState(order.serviceType || 'Office');
   const [items, setItems] = useState(order.items);
-  const [deliveryAddress, setDeliveryAddress] = useState(order.deliveryAddress || ''); // 👈 move this line here
+  const [deliveryAddress, setDeliveryAddress] = useState(order.deliveryAddress || ''); 
+  const [observation, setObservation] = useState(order.observation || '');
 
 
   const handleItemChange = (index, field, value) => {
@@ -36,6 +37,7 @@ function EditOrderForm({ order, onUpdated, onCancel }) {
       telephoneNumber,
       serviceType,
       deliveryAddress: serviceType === 'PickupDelivery' ? deliveryAddress : null,
+      observation,
       status,
       items: items.map(item => ({
         ...item,
@@ -94,6 +96,13 @@ function EditOrderForm({ order, onUpdated, onCancel }) {
         <option value="Office">Office</option>
         <option value="PickupDelivery">PickupDelivery</option>
       </select>
+
+      <textarea
+       placeholder="Observation (optional)"
+       value={observation}
+       onChange={(e) => setObservation(e.target.value)}
+      ></textarea>
+
 
       <h4>Items</h4>
       {items.map((item, index) => (

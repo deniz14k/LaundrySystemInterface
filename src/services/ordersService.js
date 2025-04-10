@@ -1,8 +1,6 @@
-// src/services/ordersService.js
+const API_BASE_URL = 'https://localhost:7223'; 
 
-const API_BASE_URL = 'https://localhost:7223'; // or wherever your .NET API is running
-
-// GET all orders
+//get orders
 export async function getAllOrders() {
   const response = await fetch(`${API_BASE_URL}/api/orders`);
   if (!response.ok) {
@@ -11,7 +9,7 @@ export async function getAllOrders() {
   return await response.json();
 }
 
-// GET single order by ID
+//get order by id, fetches order by its ID
 export async function getOrderById(id) {
   const response = await fetch(`${API_BASE_URL}/api/orders/${id}`);
   if (!response.ok) {
@@ -20,7 +18,7 @@ export async function getOrderById(id) {
   return await response.json();
 }
 
-// POST: create new order
+// post method, for creating an order
 export async function createOrder(orderData) {
   const response = await fetch(`${API_BASE_URL}/api/orders`, {
     method: 'POST',
@@ -33,7 +31,7 @@ export async function createOrder(orderData) {
   return await response.json();
 }
 
-// PUT: update existing order
+//put(edit order), updates an order by its ID
 export async function updateOrder(id, orderData) {
   const response = await fetch(`${API_BASE_URL}/api/orders/${id}`, {
     method: 'PUT',
@@ -43,11 +41,11 @@ export async function updateOrder(id, orderData) {
   if (!response.ok) {
     throw new Error('Failed to update order.');
   }
-  // For PUT, you might just get 204, so you can return the status or nothing
+
   return response;
 }
 
-// DELETE: delete order
+//delete order method (by id)
 export async function deleteOrder(id) {
   const response = await fetch(`${API_BASE_URL}/api/orders/${id}`, {
     method: 'DELETE'
@@ -58,7 +56,6 @@ export async function deleteOrder(id) {
   return response;
 }
 
-// Add this function to src/services/ordersService.js
 
 export async function getFilteredOrders({ searchTerm, status, fromDate, toDate }) {
   const params = new URLSearchParams();

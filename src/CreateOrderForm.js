@@ -12,6 +12,8 @@ function CreateOrderForm({ onOrderCreated }) {
   const [items, setItems] = useState([
     { type: 'Carpet', length: '', width: '' }
   ]);
+  const [observation, setObservation] = useState('');
+
 
   const handleItemChange = (index, field, value) => {
     const updated = [...items];
@@ -41,9 +43,11 @@ function CreateOrderForm({ onOrderCreated }) {
       telephoneNumber,
       serviceType,
       deliveryAddress: serviceType === 'PickupDelivery' ? deliveryAddress : null,
+      observation,
       status: 'Pending',
       items: formattedItems,
     };
+    
     
 
     try {
@@ -88,6 +92,11 @@ function CreateOrderForm({ onOrderCreated }) {
   />
 )}
 
+<textarea
+        placeholder="Observation (optional)"
+        value={observation}
+        onChange={(e) => setObservation(e.target.value)}
+       ></textarea>
 
       <h4>Items</h4>
       {items.map((item, index) => (
@@ -122,6 +131,9 @@ function CreateOrderForm({ onOrderCreated }) {
       ))}
 
       <button type="button" onClick={handleAddItem}>Add Item</button>
+
+      
+
       <button type="submit">Create Order</button>
     </form>
   );
