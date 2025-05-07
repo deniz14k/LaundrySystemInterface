@@ -1,74 +1,77 @@
-const API_BASE_URL = 'https://localhost:7223'; 
+// src/services/ordersService.js
+const API_BASE_URL = 'https://localhost:7223';
 
-//get orders
+/** ----------------------------------------------------------------
+ *  Helper – always attach JWT if it exists in localStorage
+ * ----------------------------------------------------------------*/
+function authHeaders(extra = {}) {
+  const token = localStorage.getItem('token');
+  return token
+    ? { Authorization: `Bearer ${token}`, ...extra }
+    : { ...extra };
+}
+
+/** ------------------------------- GET all orders */
 export async function getAllOrders() {
-  const response = await fetch(`${API_BASE_URL}/api/orders`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch orders.');
-  }
-  return await response.json();
+  const res = await fetch(`${API_BASE_URL}/api/orders`, {
+    headers: authHeaders(),
+  });
+  if (!res.ok) throw new Error('Failed to fetch orders.');
+  return res.json();
 }
 
-//get order by id, fetches order by its ID
+/** ------------------------------- GET single order */
 export async function getOrderById(id) {
-  const response = await fetch(`${API_BASE_URL}/api/orders/${id}`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch order.');
-  }
-  return await response.json();
+  const res = await fetch(`${API_BASE_URL}/api/orders/${id}`, {
+    headers: authHeaders(),
+  });
+  if (!res.ok) throw new Error('Failed to fetch order.');
+  return res.json();
 }
 
-// post method, for creating an order
+/** ------------------------------- POST create order */
 export async function createOrder(orderData) {
-  const response = await fetch(`${API_BASE_URL}/api/orders`, {
+  const res = await fetch(`${API_BASE_URL}/api/orders`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: authHeaders({ 'Content-Type': 'application/json' }),
     body: JSON.stringify(orderData),
   });
-  if (!response.ok) {
-    throw new Error('Failed to create order.');
-  }
-  return await response.json();
+  if (!res.ok) throw new Error('Failed to create order.');
+  return res.json();
 }
 
-//put(edit order), updates an order by its ID
+/** ------------------------------- PUT update order */
 export async function updateOrder(id, orderData) {
-  const response = await fetch(`${API_BASE_URL}/api/orders/${id}`, {
+  const res = await fetch(`${API_BASE_URL}/api/orders/${id}`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
+    headers: authHeaders({ 'Content-Type': 'application/json' }),
     body: JSON.stringify(orderData),
   });
-  if (!response.ok) {
-    throw new Error('Failed to update order.');
-  }
-
-  return response;
+  if (!res.ok) throw new Error('Failed to update order.');
+  return res;
 }
 
-//delete order method (by id)
+/** ------------------------------- DELETE order */
 export async function deleteOrder(id) {
-  const response = await fetch(`${API_BASE_URL}/api/orders/${id}`, {
-    method: 'DELETE'
+  const res = await fetch(`${API_BASE_URL}/api/orders/${id}`, {
+    method: 'DELETE',
+    headers: authHeaders(),
   });
-  if (!response.ok) {
-    throw new Error('Failed to delete order.');
-  }
-  return response;
+  if (!res.ok) throw new Error('Failed to delete order.');
+  return res;
 }
 
-
+/** ------------------------------- GET filtered orders */
 export async function getFilteredOrders({ searchTerm, status, fromDate, toDate }) {
   const params = new URLSearchParams();
-
   if (searchTerm) params.append('searchTerm', searchTerm);
-  if (status) params.append('status', status);
-  if (fromDate) params.append('fromDate', fromDate);
-  if (toDate) params.append('toDate', toDate);
+  if (status)     params.append('status', status);
+  if (fromDate)   params.append('fromDate', fromDate);
+  if (toDate)     params.append('toDate', toDate);
 
-  const response = await fetch(`https://localhost:7223/api/orders?${params.toString()}`);
-  if (!response.ok) throw new Error('Failed to fetch filtered orders');
-  return await response.json();
+  const res = await fetch(`${API_BASE_URL}/api/orders?${params.toString()}`, {
+    headers: authHeaders(),
+  });
+  if (!res.ok) throw new Error('Failed to fetch filtered orders.');
+  return res.json();
 }
-
-
-

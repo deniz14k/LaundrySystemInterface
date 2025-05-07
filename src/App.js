@@ -4,20 +4,29 @@ import OrdersPage from './pages/OrdersPage';
 import CreateOrderPage from './pages/CreateOrderPage';
 import EditOrderPage from './pages/EditOrderPage';
 import OrderDetailsPage from './pages/OrderDetailsPage';
-import LoginPage from './pages/LoginPage.js';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import TopBar from './components/TopBar';
 
 function App() {
   return (
     <Router>
-      <nav style={{ marginBottom: '20px' }}>
+      {/*  1️⃣  Top-level bar with Logout / user email  */}
+      <TopBar />
+
+      {/*  2️⃣  (optional) keep your old text nav below it  */}
+      <nav style={{ margin: '20px 0' }}>
         <Link to="/">Orders</Link> | <Link to="/create">New Order</Link>
       </nav>
+
+      {/*  3️⃣  All your routes  */}
       <Routes>
-        <Route path="/" element={<OrdersPage />} />
-        <Route path="/create" element={<CreateOrderPage />} />
-        <Route path="/edit/:id" element={<EditOrderPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/order/:id" element={<OrderDetailsPage />} /> {}
+        <Route path="/"            element={<OrdersPage />} />
+        <Route path="/create"      element={<CreateOrderPage />} />
+        <Route path="/edit/:id"    element={<EditOrderPage />} />
+        <Route path="/order/:id"   element={<OrderDetailsPage />} />
+        <Route path="/login"       element={<LoginPage />} />
+        <Route path="/register"    element={<RegisterPage />} />
       </Routes>
     </Router>
   );
